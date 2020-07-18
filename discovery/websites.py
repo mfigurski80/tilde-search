@@ -18,6 +18,7 @@ def discover_sites_for(user):
                 found_files.append(cur_path + n)
     return found_files
 
+
 def discover_sites():
     users = open('./users.txt').readlines()
     sites_file = open('./sites.txt', 'a+')
