@@ -1,3 +1,4 @@
 env/
 crawler/*.txt
 crawler/*.json
+discovery/*.txt
