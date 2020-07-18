@@ -13,8 +13,8 @@ Responsible for:
 
 Not creepy at all. Responsible for:
 
-* Downloading and creating English frequency dictionary
-* Storing which websites have been tagged with hash of their content
+* Downloading and creating per-word document-frequency dictionary for tf-idf
+* Storing which websites have been tagged with timestamp and hash of content 
 * Pulling keywords and tagging websites into general tag dictionary
 
 
