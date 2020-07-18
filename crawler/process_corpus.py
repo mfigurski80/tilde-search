@@ -1,3 +1,5 @@
+from Porter import stem
+
 
 def get_stop_words():
     with open('./stopwords.txt') as f:
@@ -22,22 +24,14 @@ def clean_word(word):
     return word.strip().lower()
 
 
-def stem_word(word):
-    """ Finds the stem of a word (result not always actual english)
-    Usage:
-    >>> stem_word('walking')
-    'walk'
-    """
-    for seq in stem_seqs:
-        if word.endswith(seq):
-            return word[:-len(seq)]
-    return word
-
-
 def tokenize(corpus):
+    """ Convert words into stemmed and cleaned tokens
+    Usage:
+    >>> tokenize('Let\\'s go running')
+    ['let', 'go', 'run']
+    """
     words = corpus.split(' ')
-    words = [clean_word(word) for word in words if word not in stop_words]
-    words = [stem_word(word) for word in words]
+    words = [stem(clean_word(word)) for word in words if word not in stop_words]
     return words
 
 
