@@ -27,7 +27,7 @@ def discover_sites():
         print(f'Discovering: {user}')
         try:
             sites = discover_sites_for(user)
-            sites = [f'tilde.club/~{user}/{site}' for site in sites]
+            sites = [f'http://tilde.club/~{user}/{site}' for site in sites]
             sites_file.write('\n'.join(sites))
             sites_file.write('\n')
         except OSError as e:
