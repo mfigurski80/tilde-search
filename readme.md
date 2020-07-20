@@ -29,4 +29,4 @@ metadata
 * `crawl` file - goes thru urls and gathers tags + metadata for dictionaries
 
 
-This document last updated: Jul 18 2020
+This document last updated: Jul 20 2020
