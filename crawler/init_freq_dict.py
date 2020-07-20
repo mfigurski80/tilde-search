@@ -1,30 +1,10 @@
-import urllib.request
-import re
-from bs4 import BeautifulSoup as bs4
-from pdb import set_trace as tr
-
 from data import *
+from parse_url import *
 from tokenize_corpus import tokenize
 
 
-def get_site(url):
-    return urllib.request.urlopen(url).read()
-
-
-def parse_text(html):
-    soup = bs4(html)
-    for script in soup(["script", "style"]):
-        script.extract()    # rip it out
-    text = soup.get_text()
-    text = re.sub('[^a-zA-Z\']+', ' ', text).strip()
-    return text
-
-
-def make_document_frequency_dict(batches=20):
-    n, last, frequency = read_json(
-        './document_frequency.json',
-        {'count': 0, 'last': None, 'data': {}}
-    ).values()
+def make_document_frequency_dict(batch=20):
+    n, last, frequency = read_document_frequency().values()
 
     sites = read_sites()
     if last is not None and n > 0:
@@ -46,10 +26,10 @@ def make_document_frequency_dict(batches=20):
             frequency[word] += 1
         n += 1
         last = s
-        if (i + 1) % batches == 0:  # save in batches
-            write_json('./document_frequency.json', {'count': n, 'last': last, 'data': frequency})
+        if (i + 1) % batch == 0:  # save in batches
+            write_document_frequency({'count': n, 'last': last, 'data': frequency})
 
-    write_json('./document_frequency.json', {'count': n, 'last': last, 'data': frequency})
+    write_document_frequency({'count': n, 'last': last, 'data': frequency})
 
 
 if __name__ == '__main__':
