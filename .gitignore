@@ -1,2 +1,5 @@
 env/
-data/saved/
+crawler/*.txt
+crawler/*.json
+discovery/*.txt
+**/__pycache__/

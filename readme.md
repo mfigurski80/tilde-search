@@ -2,22 +2,31 @@
 
 Search engine for tilde-based websites
 
-## Database / Data_Queue
+## Discovery
 
-Can be found in current `data` folder. The Data_Queue object is a repository for
-data about the existence of discovered sites, existence of tagged sites, and
-tags generated for each site.
+Responsible for:
 
-Queries possible from the exported object:
+* Discovering + temp storing users
+* Discovering + temp storing public websites
 
-* pop_discovered
-* push_discovered
-* peek_tagged
-* push_tagged
-* peek_tag
-* push_tag
+## Crawler
 
-Note that you can only pop discovered sites, as the list of tagged sites and
-tags themselves should never be edited after their creation
+Not creepy at all. Responsible for:
 
-This document last changed: Jul 17
+* Downloading and creating per-word document-frequency dictionary for tf-idf
+* Storing which websites have been tagged with timestamp and hash of content
+* Pulling keywords and tagging websites into general tag dictionary
+
+Content explanantion
+
+* `tokenize_corpus` and `Porter` files - are responsible for cleaning corpus data
+into stemmed tokens. Needs `stopwords.txt` file in same dir
+* `data` file - interfaces with numerous text and json files for easy data
+management
+* `parse_url` file - handles html, including requests and parsing text and
+metadata
+* `init_freq_dir` file - creates and/or updates document frequency dictionary
+* `crawl` file - goes thru urls and gathers tags + metadata for dictionaries
+
+
+This document last updated: Jul 20 2020
