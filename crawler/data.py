@@ -51,9 +51,9 @@ def write_tags(obj):
     return write_json('./tags.json', obj)
 
 
-def read_sites():
+def read_metadata():
     return read_json('./sites.json', {})
 
 
-def write_sites(obj):
-    return write_json('./sites.json', {})
+def write_metadata(obj):
+    return write_json('./sites.json', obj)
