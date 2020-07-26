@@ -40,8 +40,6 @@ def crawl_sites(batch=20):
         metadata['linked_domain'] = sites_meta[s]['linked_domain']
         sites_meta[s] = metadata
 
-        tr()
-
         if len(to_crawl) % batch == 0:
             write_results(tags, sites_meta)
     pass

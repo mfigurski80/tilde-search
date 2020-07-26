@@ -47,6 +47,8 @@ def parse_links(soup, url):
     links = [l['href'].split('?')[0].split('#')[0] for l in soup.find_all('a', href=True)]
     links = [l for l in links if l != url]
     # TODO: add domain to relative links
+    links = [l for l in links if not l.startswith('/')]
+    # links = [url + l for l in links if l.startswith('/') else l]
 
     links_user = [l for l in links if is_tilde(l) and parse_user(l) == user]
     links_domain = [l for l in links if is_tilde(l) and parse_user(l) != user]
