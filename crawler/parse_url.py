@@ -8,7 +8,7 @@ from tokenize_corpus import tokenize
 
 
 def get_site(url):
-    return urllib.request.urlopen(url).read()
+    return urllib.request.urlopen(f'http://tilde.club/{url}').read()
 
 
 def parse_text(html):
@@ -34,7 +34,8 @@ def parse_tags_tfidf(html, dict):
 def parse_user(url):
     match = re.search('~\w+', url)
     if match is None:
-        raise Exception(f'No user could be found in url: {url}')
+        return None
+        # raise Exception(f'No user could be found in url: {url}')
     return match.group().replace('~', '')
 
 
@@ -50,8 +51,8 @@ def parse_links(soup, url):
     links = [l for l in links if not l.startswith('/')]
     # links = [url + l for l in links if l.startswith('/') else l]
 
-    links_user = [l for l in links if is_tilde(l) and parse_user(l) == user]
-    links_domain = [l for l in links if is_tilde(l) and parse_user(l) != user]
+    links_user = ['~' + l.split('~')[1] for l in links if is_tilde(l) and parse_user(l) == user]
+    links_domain = ['~' + l.split('~')[1] for l in links if is_tilde(l) and parse_user(l) != user]
     links_exterior = [l for l in links if not is_tilde(l)]
     return links_user, links_domain, links_exterior
 
