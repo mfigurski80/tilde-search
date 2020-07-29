@@ -9,14 +9,20 @@ def crawl_sites(batch=20):
     dictionary = read_document_frequency()
     to_crawl = read_sites()
     tags, sites_meta = read_results()
+    to_crawl = to_crawl[sites_meta['last_index']:]
 
     while len(to_crawl) > 0:
+        # get + log site
         s = to_crawl.pop(0)
         if len(s) <= 0:
             continue
-        print(f'Crawl #{len(to_crawl)}->#{len(sites_meta)} : {s}')
-
-        tags_data, metadata = parse_url(s, dictionary)
+        print(f'Crawl #{len(to_crawl)} : http://tilde.club/{s}')
+        # get data
+        try:
+            tags_data, metadata = parse_url(s, dictionary)
+        except FileNotFoundError as e:
+            print(e)
+            continue
         # handle tag data
         for t in tags_data:
             if t not in tags:
@@ -39,6 +45,7 @@ def crawl_sites(batch=20):
         metadata['linked_user'] = sites_meta[s]['linked_user']
         metadata['linked_domain'] = sites_meta[s]['linked_domain']
         sites_meta[s] = metadata
+        sites_meta['last_index'] += 1
 
         if len(to_crawl) % batch == 0:
             write_results(tags, sites_meta)

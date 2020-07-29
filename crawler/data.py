@@ -52,7 +52,7 @@ def write_tags(obj):
 
 
 def read_metadata():
-    return read_json('./sites.json', {})
+    return read_json('./sites.json', {'last_index': 0})
 
 
 def write_metadata(obj):
