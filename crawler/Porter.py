@@ -314,15 +314,18 @@ def stem(word):
     >>> stem('running')
     'run'
     """
-    word = _step1a(word)
-    word = _step1b(word)
-    word = _step1c(word)
-    word = _step2(word)
-    word = _step3(word)
-    word = _step4(word)
-    word = _step5a(word)
-    word = _step5b(word)
-    return word
+    try:
+        word = _step1a(word)
+        word = _step1b(word)
+        word = _step1c(word)
+        word = _step2(word)
+        word = _step3(word)
+        word = _step4(word)
+        word = _step5a(word)
+        word = _step5b(word)
+        return word
+    except:
+        return word
 
 
 if __name__ == '__main__':

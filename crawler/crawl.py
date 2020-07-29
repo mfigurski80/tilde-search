@@ -5,6 +5,9 @@ from parse_url import *
 from tokenize_corpus import tokenize
 
 
+blacklist = ['node_modules/']
+
+
 def crawl_sites(batch=20):
     dictionary = read_document_frequency()
     to_crawl = read_sites()
@@ -14,7 +17,7 @@ def crawl_sites(batch=20):
     while len(to_crawl) > 0:
         # get + log site
         s = to_crawl.pop(0)
-        if len(s) <= 0:
+        if len(s) <= 0 or any([i in s for i in blacklist]):
             continue
         print(f'Crawl #{len(to_crawl)} : http://tilde.club/{s}')
         # get data
