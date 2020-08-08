@@ -1,4 +1,5 @@
 import urllib.request
+import urllib.parse
 import re
 import math
 from bs4 import BeautifulSoup as bs4
@@ -8,7 +9,11 @@ from tokenize_corpus import tokenize
 
 
 def get_site(url):
-    return urllib.request.urlopen(url).read()
+    url = urllib.parse.quote(url)
+    try:
+        return urllib.request.urlopen(f'http://tilde.club/{url}').read()
+    except urllib.error.HTTPError as e:
+        raise FileNotFoundError(f'{url} not found')
 
 
 def parse_text(html):
@@ -23,18 +28,17 @@ def parse_text(html):
 def parse_tags_tfidf(html, dict):
     tokens = tokenize(parse_text(html))
     tf = {k: tokens.count(k) / len(tokens) for k in tokens}
-    idf = {k: math.log(dict['count'] / dict['data'][k]) for k in tf}
+    idf = {k: math.log(dict['count'] / dict['data'][k]) if k in dict['data']
+           else math.log(dict['count'] / 1) for k in tf}
     tfidf = {k: round(tf[k] * idf[k], 5) for k in tf}
     return tfidf
-
-    limit_tfidf = round(sum(tfidf.values())/len(tfidf) * 1.0, 5)
-    return {k: tfidf[k] for k in tfidf if tfidf[k] >= limit_tfidf}
 
 
 def parse_user(url):
     match = re.search('~\w+', url)
     if match is None:
-        raise Exception(f'No user could be found in url: {url}')
+        return None
+        # raise Exception(f'No user could be found in url: {url}')
     return match.group().replace('~', '')
 
 
@@ -50,8 +54,9 @@ def parse_links(soup, url):
     links = [l for l in links if not l.startswith('/')]
     # links = [url + l for l in links if l.startswith('/') else l]
 
-    links_user = [l for l in links if is_tilde(l) and parse_user(l) == user]
-    links_domain = [l for l in links if is_tilde(l) and parse_user(l) != user]
+    links_user = ['~' + l.split('~')[1] for l in links if is_tilde(l) and parse_user(l) == user]
+    links_domain = ['~' + l.split('~')[1] for l in links if is_tilde(l)
+                    and parse_user(l) != user and parse_user(l) != None]
     links_exterior = [l for l in links if not is_tilde(l)]
     return links_user, links_domain, links_exterior
 
@@ -85,13 +90,16 @@ def parse_url(url, dictionary):
     soup = bs4(html, features='html.parser')
 
     tfidf = parse_tags_tfidf(html, dictionary)
-    limit_tfidf = round(sum(tfidf.values())/len(tfidf) * 1.0, 5)
+    limit_tfidf = round(sum(tfidf.values())/max(len(tfidf), 1) * 1.0, 5)
     tags = {k: tfidf[k] for k in tfidf if tfidf[k] >= limit_tfidf}
 
     links_user, links_domain, links_exterior = parse_links(soup, url)
+    title = None
+    if soup.title is not None:
+        title = soup.title.text
     metadata = Metadata(
         size=len(html),
-        title=soup.title.text,
+        title=title,
         hash=hash(html) % 1048576,
         avg_tfidf=limit_tfidf,
         linked_user=[],
