@@ -33,27 +33,27 @@ def write_sites(data):
 
 def read_document_frequency():
     default = {'count': 0, 'last': None, 'data': {}}
-    json = read_json('./data/document_frequency.json', default)
+    json = read_json('../data/document_frequency.json', default)
     assert json.keys() == default.keys()
     return json
 
 
 def write_document_frequency(obj):
     assert obj.keys() == ['count', 'last', 'data']
-    return write_json('./data/document_frequency.json', obj)
+    return write_json('../data/document_frequency.json', obj)
 
 
 def read_tags():
-    return read_json('./data/tags.json', {})
+    return read_json('../data/tags.json', {})
 
 
 def write_tags(obj):
-    return write_json('./data/tags.json', obj)
+    return write_json('../data/tags.json', obj)
 
 
 def read_metadata():
-    return read_json('./data/sites.json', {'last_index': 0})
+    return read_json('../data/sites.json', {'last_index': 0})
 
 
 def write_metadata(obj):
-    return write_json('./data/sites.json', obj)
+    return write_json('../data/sites.json', obj)
